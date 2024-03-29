@@ -4,9 +4,40 @@ import { Link } from "react-router-dom";
 const WebsitePage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
-  const handleSearch = () => {
-    // Perform search logic here
-    console.log("Search term:", searchTerm);
+  const handleSearch = async () => {
+    try {
+      // Perform search logic here
+      console.log("Search term:", searchTerm);
+
+      // Call searchWebsite function with the entered website URL
+      await searchWebsite(searchTerm);
+    } catch (error) {
+      console.error("Error performing search:", error);
+      // Handle errors
+    }
+  };
+
+  const searchWebsite = async (websiteUrl: string) => {
+    try {
+      const response = await fetch("http://localhost:8000/search/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ website_url: websiteUrl }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch data");
+      }
+
+      const data = await response.json();
+      console.log("Data received from backend:", data);
+      // Handle the received data as needed
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      // Handle errors
+    }
   };
 
   return (
